@@ -1,7 +1,7 @@
 'use client';
-
 import { useState } from 'react';
 import Loader from "@/components/Loader";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
 export default function LiminalNetwork() {
   const [status, setStatus] = useState('idle'); // idle, loading, response, error
@@ -21,7 +21,7 @@ export default function LiminalNetwork() {
 
     // Create a unique endpoint to avoid caching
     const endpoint = `/liminal/${Date.now()}`;
-    const SERVER_URL = 'http://localhost:3000'; // Server URL
+    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'; // Server URL
 
     try {
       const response = await fetch(SERVER_URL + endpoint, {
