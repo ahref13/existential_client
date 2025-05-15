@@ -58,9 +58,3 @@ The application will be available at http://localhost:3001 (or another port if 3
 3. Observe the cockroach moving in circles during the loading state
 4. The server will respond with a random HTTP status after a random delay
 5. If auto-retry is enabled, non-success responses will trigger automatic retries
-
-## Artistic Concept
-
-This installation explores the liminal spaces in network communication - the transitional periods between request and response where the state is uncertain. The cockroach, an organism known for inhabiting liminal spaces in the physical world, serves as a visual metaphor for the uncertainty and liminality of digital network communications.
-
-The randomly generated HTTP status codes (ranging from 100-599) reflect the various possible states of network communication, while the intentional delays create a temporal liminal space where the user exists in a state of waiting and uncertainty.
