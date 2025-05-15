@@ -1,40 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Liminal Network Space Client
 
-## Getting Started
+## Important Note
 
-First, run the development server:
+Make sure that before running the client side to run the server because the constant for the API will be `const SERVER_URL = 'http://localhost:3000'`
+
+So first download the server repo and make sure to run that.
+
+## Prerequisites
+
+* Node.js (v16.0.0 or newer)
+* npm or yarn
+
+## Installation and Setup
+
+### 1. Clone or Download the Repository
+
+```bash
+git clone [repository-url]
+# or download and extract the ZIP file
+```
+
+### 2. Install Dependencies
+
+Navigate to the project directory and install dependencies:
+
+```bash
+cd liminal-network-client
+npm install
+# or
+yarn install
+```
+
+### 3. Configure Server Connection
+
+Open `components/LiminalNetwork.jsx` and locate the SERVER_URL constant:
+
+```javascript
+const SERVER_URL = 'http://localhost:3000'; // Replace with server IP if needed
+```
+
+If running the server on a different machine or port, update this URL accordingly.
+
+### 4. Start the Development Server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at http://localhost:3001 (or another port if 3001 is in use).
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Usage
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+1. Open the application in a web browser
+2. Click the "Initiate Connection Request" button
+3. Observe the cockroach moving in circles during the loading state
+4. The server will respond with a random HTTP status after a random delay
+5. If auto-retry is enabled, non-success responses will trigger automatic retries
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## Artistic Concept
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This installation explores the liminal spaces in network communication - the transitional periods between request and response where the state is uncertain. The cockroach, an organism known for inhabiting liminal spaces in the physical world, serves as a visual metaphor for the uncertainty and liminality of digital network communications.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+The randomly generated HTTP status codes (ranging from 100-599) reflect the various possible states of network communication, while the intentional delays create a temporal liminal space where the user exists in a state of waiting and uncertainty.

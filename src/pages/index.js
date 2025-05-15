@@ -1,115 +1,99 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+'use client';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import { useState } from 'react';
+import Loader from "@/components/Loader";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export default function LiminalNetwork() {
+  const [status, setStatus] = useState('idle'); // idle, loading, response, error
+  const [responseData, setResponseData] = useState(null);
+  const [isAutoRetry, setIsAutoRetry] = useState(true);
+  const [initiated, setInitiated] = useState(false);
 
-export default function Home() {
+
+  // Make a request to the liminal server
+  const makeRequest = async (isRetry = false) => {
+    // Set loading state
+    setStatus('loading');
+    setInitiated(true);
+    if (!isRetry) {
+      setResponseData(null);
+    }
+
+    // Create a unique endpoint to avoid caching
+    const endpoint = `/liminal/${Date.now()}`;
+    const SERVER_URL = 'http://localhost:3000'; // Server URL
+
+    try {
+      const response = await fetch(SERVER_URL + endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          client: 'nextjs-client',
+          message: 'Exploring liminal network space',
+          isRetry
+        })
+      });
+
+      // Determine status class based on response code
+      let statusClass = '';
+      if (response.status >= 100 && response.status < 200) statusClass = 'information';
+      else if (response.status >= 200 && response.status < 300) statusClass = 'success';
+      else if (response.status >= 300 && response.status < 400) statusClass = 'redirection';
+      else if (response.status >= 400) statusClass = 'error';
+
+
+      // Parse and set the response data
+      const data = await response.json();
+      setResponseData(data);
+      setStatus('response');
+
+      // Auto-retry if it's an error response and auto-retry is enabled
+      if (isAutoRetry && (response.status >= 400 || response.status < 200 || (response.status >= 300 && response.status < 400))) {
+        setTimeout(() => makeRequest(true), 2000);
+      }
+    } catch (error) {
+      // Log and set the error
+      setStatus('error');
+      setResponseData({ error: error.message });
+
+      // Auto-retry on error if enabled
+      if (isAutoRetry) {
+        setTimeout(() => makeRequest(true), 2000);
+      }
+    }
+  };
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className="w-full flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-md flex flex-col items-center">
+          <div className="flex flex-col gap-4">
+            {!initiated && (
+                <button
+                    onClick={() => makeRequest(false)}
+                    disabled={status === 'loading' && !responseData}
+                    className="px-4 py-2 border-black rounded-md font-mono text-sm bg-white text-black hover:bg-gray-100 transition duration-200 ease-in-out shadow-md"
+                >
+                  Initiate Connection Request
+                </button>
+            )}
+          </div>
+
+          {/* Loading spinner */}
+          {status === 'loading' ? (
+              <div className="mt-8">
+                <Loader />
+              </div>
+          ) : (
+              <div className="mt-8">
+                <p className="text-sm font-mono text-black p-4">
+                  looking somewhere else...
+                </p>
+              </div>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
   );
 }
