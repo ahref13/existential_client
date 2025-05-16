@@ -16,7 +16,7 @@ So first download the server repo and make sure to run that.
 ### 1. Clone or Download the Repository
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/ahref13/existential_client.git
 # or download and extract the ZIP file
 ```
 
