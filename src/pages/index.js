@@ -21,20 +21,14 @@ export default function LiminalNetwork() {
 
     // Create a unique endpoint to avoid caching
     const endpoint = `/liminal/${Date.now()}`;
-    const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'; // Server URL
+    const SERVER_URL = 'http://localhost:3000'; // Server URL
 
     try {
       const response = await fetch(SERVER_URL + endpoint, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          timestamp: new Date().toISOString(),
-          client: 'nextjs-client',
-          message: 'Exploring liminal network space',
-          isRetry
-        })
       });
 
       // Determine status class based on response code
@@ -56,8 +50,7 @@ export default function LiminalNetwork() {
       }
     } catch (error) {
       // Log and set the error
-      setStatus('error');
-      setResponseData({ error: error.message });
+      console.log(error.message);
 
       // Auto-retry on error if enabled
       if (isAutoRetry) {
@@ -89,7 +82,7 @@ export default function LiminalNetwork() {
           ) : (
               <div className="mt-8">
                 <p className="text-sm font-mono text-black p-4">
-                  looking somewhere else...
+                  trying again...
                 </p>
               </div>
           )}
