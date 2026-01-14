@@ -29,13 +29,6 @@ export default function LiminalNetwork() {
         },
       });
 
-      // Determine status class based on response code
-      let statusClass = '';
-      if (response.status >= 100 && response.status < 200) statusClass = 'information';
-      else if (response.status >= 200 && response.status < 300) statusClass = 'success';
-      else if (response.status >= 300 && response.status < 400) statusClass = 'redirection';
-      else if (response.status >= 400) statusClass = 'error';
-
       // Parse and set the response data
       const data = await response.json();
       setResponseData(data);
@@ -44,8 +37,8 @@ export default function LiminalNetwork() {
       // Console.log the response message instead of showing as error
       console.log(data.message);
 
-      // Auto-retry if it's an error response and auto-retry is enabled
-      if (isAutoRetry && (response.status >= 400 || response.status < 200 || (response.status >= 300 && response.status < 400))) {
+      // Auto-retry after response completes (simplified condition)
+      if (isAutoRetry) {
         setTimeout(() => makeRequest(true), 2000);
       }
     } catch (error) {
