@@ -20,7 +20,7 @@ export default function LiminalNetwork() {
 
     // Create a unique endpoint to avoid caching
     const endpoint = `/liminal/${Date.now()}`;
-    const SERVER_URL = 'https://existentialserver-production.up.railway.app'; // Server URL
+    const SERVER_URL = 'https://existentialserver-production.up.railway.app'; // Server
 
     try {
       const response = await fetch(SERVER_URL + endpoint, {
